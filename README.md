@@ -1,1 +1,1 @@
-See [https://bertbaron.github.io/blog/](https://bertbaron.github.io/blog/)
+See [https://bertbaron.github.io/](https://bertbaron.github.io/)
