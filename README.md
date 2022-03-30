@@ -1,2 +1,1 @@
-# bertbaron.github.io
-Website / blog (https://bertbaron.github.io/)
+See [https://bertbaron.github.io/blog/](https://bertbaron.github.io/blog/)
