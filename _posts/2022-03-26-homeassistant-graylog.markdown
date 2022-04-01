@@ -1,9 +1,9 @@
 ---
 classes: wide
 title:  "Sending Home Assistant logs to Graylog"
-date:   2022-03-28
+date:   2022-03-31
 categories: Tech
-tags: homeassistant graylog docker syslog
+tags: homeassistant graylog docker syslog gelf
 ---
 
 I recently installed Graylog and configured Home Assistant logs to be send to Graylog. Since I'm quite happy with this setup and couldn't find much about how to set it up I decided to write something down myself.
@@ -12,13 +12,13 @@ I'll start this post with the basic installation to get HA logs in Graylog, at w
 
 The following image already gives an idea of the end result:
 
-[![Graylog Home Assistant](/assets/graylog_img_1.png)](/assets/graylog_img_1.png')
+[![Graylog Home Assistant](/assets/graylog_img_1.png)](/assets/graylog_img_1.png)
 
 ## What is Graylog and why I installed it
 
-Graylog is a log management system. It can collect logs from all kinds of sources and makes them easy searchable. In my case I was a bit bugged by the fact that I kept searching for the different logs of components in Home Assistant and then searching in those logs for the messages of interest. With Graylog I have all logs at a single place and it can easily and quickly search and filter the log. And I can correlate logs from different sources, for example to see the zigbee2mqtt event preceding my node-red debug message.
+Graylog is a log management system. It can collect logs from all kinds of sources and makes them easy searchable. It's backed by Elasticsearch. In my case I was a bit bugged by the fact that I kept searching for the different logs of components in Home Assistant and then searching in those logs for the messages of interest. With Graylog I have all logs at a single place and I can easily and quickly search and filter the logs. And I can correlate logs from different sources, for example to see the zigbee2mqtt event preceding my node-red debug message. And its all amazingly fast, even for queries way back in time or with a lot of results.
 
-By sending the logs directly from the Docker daemon trough GELF (Graylog Extended Log Format) we can benefit form extra metadata fields, in particular the container name.
+By sending the logs directly from the Docker daemon trough GELF (Graylog Extended Log Format) we can benefit form extra metadata fields. In particular the container name is very useful for filtering HA logs.
 
 ## Reasons not to use Graylog for HA logs
 
@@ -142,29 +142,30 @@ Graylog uses syslog log levels by default, a range from 0 to 7 with 3 being an e
 
 Most messages do contain words like `error` or `debug` however, so I used a Graylog pipeline to extract the level based on that. The container `hassio_audio` logs messages with prefixes like `I:` and `E:` so I included those too.
 
-To do this also, select `System ➔ Pipelines`. Select `Manage rules`. Create a rule with Description `critical` and `Rule source`:
+To do this also, select `System ➔ Pipelines`. Select `Manage rules`. Create a rule with Description `fatal` and `Rule source`:
 <!--- its not ruby actually but it seems to match good enough --->
 ```ruby
-rule "critical"
+rule "fatal"
 when
    has_field("container_name")
-   AND to_bool(regex("(^C:)|(?i)critical", to_string($message.message)).matches)
+   AND to_bool(regex("(^F:)|(?i)fatal", to_string($message.message)).matches)
 then
-   set_field("level", 2);
+   set_field("level", 1);
 end
 ```
 
-Create four other rules replacing the description, rule name, regex and level with values from the table below:
+Create five other rules replacing the description, rule name, regex and level with values from the table below:
 
 | Rule   | Regex                 | Level |
 |:-------|:----------------------|:------|
+|fatal   |`(^F:)|(?i)fatal`      | 1     |
 |critical|`(^C:)|(?i)critical`   | 2     |
 |error   |`(^E:)|(?i)error`      | 3     |
 |warning |`(^W:)|(?i)warn`       | 4     |
 |info    |`(^I:)|(?i)info`       | 6     |
 |debug   |`(^D:)|(?i)debug`      | 7     |
 
-I skipped 'notice' (5) and 'fatal' (1) because I'm not sure if they actually occur but feel free to add those too.
+I skipped 'notice' (5) because I'm not sure if it will actually occur as such in the logs.
 {: .notice--info}
 
 Then choose `Manage pipelines` and create a pipeline with title `Sanitize log levels` and put all of the just created rules in stage 0.
@@ -214,7 +215,7 @@ If your host doesn't use syslog you may need to search a bit across the internet
 
 If you are new to Graylog these tips might be useful (you may have picked up some of them already along this post). These are only basic, I won't go into more advanced stuff.
 
- * Noticed the 💡 on the right of the search bar? It gives access quick to a lot of help
+ * Noticed the 💡 on the right of the search bar? It gives quick access to a lot of help
  * If you click on a field name (like **container_name**) anywhere you can add it to the table or show the top values
  * If you click on a field value (like `addon_a0d7b954_nodered`) anywhere you can add it to the query (filter on messages with the same value)
    or exclude it from the results (effectively filtering the messages out). Because this also works inside the top-values Aggregate view I like to use the 'container_name' aggregation to quickly select the container for which I like to see the logs
