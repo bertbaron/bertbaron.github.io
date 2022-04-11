@@ -1,9 +1,9 @@
 ---
 classes: wide
 title:  "Sending Home Assistant logs to Graylog"
-date:   2022-03-31
+date:   2022-04-10
 categories: Tech
-tags: homeassistant graylog docker syslog gelf
+tags: homeassistant graylog docker logspout
 ---
 
 I recently installed Graylog and configured Home Assistant logs to be send to Graylog. Since I'm quite happy with this setup and couldn't find much about how to set it up I decided to write something down myself.
@@ -16,25 +16,19 @@ The following image already gives an idea of the end result:
 
 ## What is Graylog and why I installed it
 
-Graylog is a log management system. It can collect logs from all kinds of sources and makes them easy searchable. It's backed by Elasticsearch. In my case I was a bit bugged by the fact that I kept searching for the different logs of components in Home Assistant and then searching in those logs for the messages of interest. With Graylog I have all logs at a single place and I can easily and quickly search and filter the logs. And I can correlate logs from different sources, for example to see the zigbee2mqtt event preceding my node-red debug message. And its all amazingly fast, even for queries way back in time or with a lot of results.
+Graylog is a log management system using Elastic Search. It can collect logs from all kinds of sources and makes them easy searchable. In my case I was a bit bugged by the fact that I kept searching for the different logs of components in Home Assistant and then searching in those logs for the messages of interest. With Graylog I have all logs at a single place and I can easily and quickly search and filter the log. And correlate logs from different sources, for example to see the zigbee2mqtt event preceding my node-red debug message. And its all amazingly fast, even for queries way back in time or with a lot of results.
 
-By sending the logs directly from the Docker daemon trough GELF (Graylog Extended Log Format) we can benefit form extra metadata fields. In particular the container name is very useful for filtering HA logs.
+By sending the logs directly from the Docker daemon trough GELF (Graylog Extended Log Format) we can benefit form extra metadata fields, In particular the container name is very useful for filtering HA logs.
 
 ## Reasons not to use Graylog for HA logs
 
-Graylog requires quite some resources. In my case installed it in a Proxmox LXC container and I had to assign it 3GB of memory to let it run without issues. If you host your HA on a Raspberry Pi then adding Graylog to it may be a bit too much.
-
-Another issue is that your [HA will become unsupported](https://www.home-assistant.io/more-info/unsupported/docker_configuration) because we need to alter the docker configuration. I can imagine that changing the log driver could be an issue for older docker engines because the logs wouldn't be readable anymore by `docker logs`, but nowadays that's not a problem anymore. As such the logs are still available in the usual way in HA while also being send to Graylog.
-
-If anyone can point me at potential issues then please do so. Otherwise I hope HA will support custom log configuration in the future. Maybe Graylog could be simply offered as an add-on, rendering most of this post obsolete.
+Graylog requires quite some resources. In my case installed it in a Proxmox LXC container and I had to assign it 3GB of memory to let it run without issues. If you host your HA on a Raspberry Pi then adding Graylog to it may be a bit too much (and Elastic Search on a SD-card is probably also not a good idea).
 
 ## Prerequisites
 
 1. A place to host Graylog
-1. A docker based HA installation (but not Home Assistant Operating System)
-1. Write access to the docker configuration in HA (preferably using ssh or something, not from a HA terminal add on)
-
-I don't know if it is possible to configure GELF logging on a Home Assistant Operating System installation. It might be challenging at least and unless you are an experienced user you probably shouldn't try.
+1. A Docker based HA installation
+1. Write access to the Docker configuration in HA (preferably using ssh or something, not from a HA terminal add on) or willing to install a 3rd party add-on.
 
 ## Installing Graylog
 
@@ -42,7 +36,7 @@ Graylog can be installed in various ways on various platforms and the installati
 
 In my case I created a Proxmox LXC container with Debian and installed Graylog following the instructions for Debian.
 
-It could be possible to follow the docker installation installing it side-by-side to HA. But I didn't test this and I'm not sure if the supervisor would like it for example, maybe your HA would become even more unsupported.
+It could be possible to follow the Docker installation installing it side-by-side to HA. But I didn't test this and I'm not sure if the supervisor would like it for example, maybe your HA would become even more unsupported.
 {: .notice--info}
 
 ## Enable the GELF UDP input adapter
@@ -54,9 +48,13 @@ It could be possible to follow the docker installation installing it side-by-sid
 
 ## Configure Docker to send its logs through GELF
 
+### Option 1 - by configuring the Docker log driver
+
+Docker can send all logging directly to Graylog by using the `gelf` log driver. Home Assistant however doesn't support changing the Docker log driver so you'r [HA will become unsupported](https://www.home-assistant.io/more-info/unsupported/docker_configuration). On Home Assistant Operating System it's probably not even possible. So only choose this option if you understand what you are doing and are willing to take the consequences.
+
 SSH into your HA host to change the file `/etc/docker/daemon.json`. It can't hurt to make a backup of the existing one. 
 
-Make sure you are able to recover in case docker fails to start. Hence my advice not to rely on a terminal add-on from within HA itself
+Make sure you are able to recover in case Docker fails to start. So don't rely on a terminal add-on from within HA itself
 {: .notice--warning}
 
 So do something like `sudo nano /etc/docker/daemon.json`, change the `log-driver` and add the `log-opts`
@@ -67,10 +65,16 @@ So do something like `sudo nano /etc/docker/daemon.json`, change the `log-driver
     },
     ...
 ```
-Make sure your json is correct. Then restart the docker engine. In my case this could be done with `sudo systemctl restart docker.service` but this might be different on your installation. If you don't know how to restart the docker engine you can also simply reboot the machine.
+Make sure your json is correct. Then restart the Docker engine. In my case this could be done with `sudo systemctl restart docker.service` but this might be different on your installation. If you don't know how to restart the Docker engine you can also simply reboot the machine.
 
 Log options may also be configured in the service init file using command line options to the daemon process. If they are already they might even override the changes in daemon.json.
 {: .notice--warning}
+
+### Option 2 - by using the Logspout add-on
+
+After writing the first version of this post, which only contained the above option, I have searched for other solutions to send the Home Assistant logs to Graylog. I found [Logspout](https://github.com/gliderlabs/logspout), which uses the Docker API from within a container to collect and forward the container logs. It can even be configured with filters and some other options. I didn't find an add-on for Home Assistant so I created one myself. The add-on does require `protection` mode to be turned off unfortunately in order to get access to the Docker API.
+
+To install the add-on, add the [hassio-addons](https://github.com/bertbaron/hassio-addons) repository and install the `logspout` add-on following the documentation.
 
 ## Find your logs in Graylog
 
@@ -172,9 +176,12 @@ Then choose `Manage pipelines` and create a pipeline with title `Sanitize log le
 
 Now you can search (for new messages) with something like `level:<6` to select all messages more important than just informational.
 
-## Optional: Remove Ansi Color Codes
+## Optional: Remove Ansi escape sequences
 
-One of the add-ons added ANSI color codes to the log output. I removed those using an extractor on the GELF UDP input. I could probably have done this also by using pipelines but I tackled this problem just before I discovered them.
+One of the add-ons added ANSI escape sequences (color codes) to the log output. I removed those using an extractor on the GELF UDP input. I could probably have done this also by using pipelines but I tackled this problem just before I discovered them.
+
+If you use the `logspout` add-on this might not be necessary. Some resources on the internet seem to suggest that logspout already handles ANSII escape sequences, but I didn't verify this yet.
+{: .notice--info}
 
 To do the same, find a message with ansi color codes (or any other message), expand it and click on the `message` value (not the field name itself). In the dropdown you can select `Create extractor`. As selector type choose `Regular expression` and then `Submit`. Enter the following:
 
@@ -187,6 +194,9 @@ You can manage your extractors by navigating to `System ➔ Inputs` and selectin
 ## Optional: Send syslog to graylog
 
 Graylog can of course collect logs from other sources also. I configured for example my Unifi AP's to also log to Graylog, just because it's possible. I must admit that they produce quite some logging including many warnings that don't tell me anything so I wonder if I wasn't happier when I didn't know about them. But on the other side, I can choose to ignore those and in the unlikely event that I might need them I do at least have easy access. And I can always route them into a specific stream if the bother me too much.
+
+When using logspout and the standard `yournald` Docker log driver this will end up in duplicate log messages.
+{: .notice--info}
 
 To enable Syslog input in Graylog:
 
@@ -224,11 +234,6 @@ If you are new to Graylog these tips might be useful (you may have picked up som
 
 ## Conclusion
 
-As said I'm pretty happy with my setup. Here are some takeaway points:
+Graylog makes searching through logs much more fun. It does require quite some resources though (3G of memory). Unfortunately HA does not officially support adjusting the Docker log configuration, making it more tricky than necessary to configure the Docker log driver. Luckily there is an alternative by using `logspout` in an add-on.
 
- * Graylog makes searching through logs much more fun
- * but it does require quite some resources though (3G of memory)
- * unfortunately HA does not officially support adjusting the Docker log configuration (Please support this HA!)
- * this makes the setup more tricky than necessary (manual adjusting `daemon.json`)
- * to get most out of the logs (levels in particular) some additional tweaking was necessary
- * but in the end it works like a charm!
+To get most out of the logs (levels in particular) some additional tweaking was necessary but in the end it works like a charm!
