@@ -36,7 +36,7 @@ Messages show up in the right side-bar under the 'bug' icon.
 
 # Pickup notification
 
-This is the easiest part. Sending a notification can be done in many different ways. The afvalwijzer provides sensors `_next_date`, `_next_in_days` and `_next_type`. I decided to use the attribute `is_collection_date_tomorrow` on the on each waste type sensor. This is how the sequence looks:
+This is the easiest part. Sending a notification can be done in many different ways. The afvalwijzer provides sensors `_next_date`, `_next_in_days` and `_next_type`. I decided to use the attribute `is_collection_date_tomorrow` on each waste type sensor. This is how the sequence looks:
 
 ![notification sequence](/assets/afvalwijzer_img_2.png "Notification sequence"){: .align-center .max-width-500}
 
@@ -64,7 +64,7 @@ On the right the notification node. As data I use JSONata again to construct a n
 
 # Changing state and pictures
 
-The afvalwijzer sensors just provide a date, like '22-05-2022'. I want to translate those to weekdays if they are in the next few days, and I want to change the picture when de pickup date is tomorrow. To achieve this we can create 'dummy' sensors with the `entity` node. An entity node will create an entity in Home Assistant, similar to a template sensor or a helper.
+The afvalwijzer sensors just provide a date, like `22-05-2022`. I want to translate those to weekdays if they are in the next few days, and I want to change the picture when de pickup date is tomorrow. To achieve this we can create 'dummy' sensors with the `entity` node. An entity node will create an entity in Home Assistant, similar to a template sensor or a helper.
 
 ![sensor sequence](/assets/afvalwijzer_img_3.png "Sensor sequence"){: .align-center .max-width-600}
 
@@ -134,9 +134,9 @@ A resulting message will ook something like:
 ```json
 {
   "topic": "restafval",
-  "payload": "14-06-2022",
+  "payload": "Dinsdag",
   "picture": "/local/afvalwijzer/restafval.png",
-  "days": 25
+  "days": 3
 }
 ```
 
@@ -204,3 +204,4 @@ As said earlier, for me Node-RED is much easier for automation and much more fun
 
 It does require some time to get to know to the different types of nodes and I must admit that I have spend hours on some sequences just to get them as nice and clean as possible, but that's also a lot of fun and quite rewarding. Especially when you finally sit back and look at this simple sequence of nicely colored nodes describing your automation.
 
+[Follow the discussion or leave a comment on the community topic](https://community.home-assistant.io/t/afvalwijzer-automation-with-node-red/423762)
