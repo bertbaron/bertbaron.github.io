@@ -34,6 +34,8 @@ defaults:
       layout: single
       author_profile: true
       permalink: /blog/:categories/:title/
+      read_time: true
+      # words_per_minute: 200
   # _pages
   - scope:
       path: "_pages"
@@ -78,3 +80,7 @@ analytics:
   # google:
   #   tracking_id: "G-QTDVGKLBCH"
   #   anonymize_ip: false # default
+
+# See https://gist.githubusercontent.com/crykn/561307b8d70ce104eba0a57f29785e3f/raw/793f4f895c940f0ca24e6b31437fac6aa9c97441/clipboard.js
+after_footer_scripts:
+  - assets/scripts/copyCode.js
