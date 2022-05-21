@@ -140,7 +140,8 @@ A resulting message will ook something like:
 }
 ```
 
-You can find my icons here: TODO
+You can find [my icons here](https://github.com/bertbaron/bertbaron.github.io/tree/main/assets/afvalwijzer).
+
 The images have to be put in the homeassistant folder `www/afvalwijzer`. I took the original images from [xirix/my-hass-config](https://github.com/xirixiz/my-hass-config/tree/master/www/afvalwijzer) and colored the alert versions myself. They aren't too pretty I'm afraid but it does the job.
 
 
