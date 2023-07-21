@@ -9,3 +9,5 @@
 .max-width-600 {
   max-width: 600px
 }
+
+.sidebar__right { margin-bottom: 2em; }

@@ -25,6 +25,12 @@ paginate_path: /page:num/
 include:
   - _pages
 
+# Collections
+collections:
+  tutorials:
+    output: true
+    permalink: /:collection/:path/
+
 defaults:
   # _posts
   - scope:
@@ -43,6 +49,14 @@ defaults:
     values:
       layout: single
       author_profile: true
+  # _tutorials
+  - scope:
+      path: ""
+      type: tutorials
+    values:
+      layout: single
+      author_profile: true
+      share: true
 
 author:
   name: Bert Baron
@@ -72,6 +86,9 @@ category_archive:
 tag_archive:
   type: liquid
   path: /tags/
+tutorial_archive:
+  type: liquid
+  path: /tutorials/
 
 analytics:
   # google consoles wants the snippet in the head
