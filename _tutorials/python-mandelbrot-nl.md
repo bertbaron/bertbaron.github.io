@@ -33,7 +33,7 @@ Ook al is de Mandelbrot in de basis eenvoudig, je zult zien dat er toch wel wat 
 app te maken waarbij je kunt inzoomen en uitzoomen en als je meer functies wilt toevoegen. Deze hele tutorial zal dus
 wel wat tijd kosten. Maar het resultaat is dan ook wel heel mooi!
 
-# Stap 1 - Installeren van Python en PyCharm
+# Installeren van Python en PyCharm
 
 ## Python installeren
 
@@ -46,7 +46,7 @@ PyCharm is een Integrated Development Environment (IDE). Je kunt Python schrijve
 heb je heel veel hulp bij het programmeren. Ga naar https://www.jetbrains.com/pycharm/download en download de gratis *
 *Community** versie. Dus niet de Professional versie want daar is een licentie voor nodig!
 
-# Stap 2 - Een python project maken
+# Een python project maken
 
 1. Open PyCharm
 2. Kies 'New Project'
@@ -56,7 +56,7 @@ heb je heel veel hulp bij het programmeren. Ga naar https://www.jetbrains.com/py
    regel `if __name == '__main__':` te klikken. Je ziet dan onderin het scherm de uitvoer van het programma. Daar zou
    nu `Hi, PyCharm` moeten staan. Gefeliciteerd, je hebt je eerste Python programma uitgevoerd!
 
-# Stap 3 - Een python applicatie maken
+# Een python applicatie maken
 
 ## Een programma schrijven
 
@@ -77,6 +77,9 @@ if __name__ == "__main__":
 ```
 
 Maak het bestand `zandbak.py` aan en kopieer de code hierboven erin. In dit zandbakje kun je spelen met Python code.
+
+TIP: Gebruik de `tab`-toets om in te springen. Met `shift-tab` kun je een regel naar links laten springen.
+{: .notice--info}
 
 Om het programma uit te voeren kun je in PyCarm met de rechtermuisknop op het bestand klikken en kiezen
 voor `Run 'zandbak'`. Wanneer je dit doet dan zal onder in het scherm een venster openen waarin de uitvoer van het

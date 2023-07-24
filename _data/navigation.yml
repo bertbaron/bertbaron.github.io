@@ -15,17 +15,17 @@ main:
 python-mandelbrot:
   - title: "Mandelbrot"
     url: "/tutorials/python-mandelbrot-nl/#mandelbrot"
-  - title: "Stap 1 - Installeren van Python en PyCharm"
-    url: "/tutorials/python-mandelbrot-nl/#stap-1---installeren-van-python-en-pycharm"
+  - title: "Installeren van Python en PyCharm"
+    url: "/tutorials/python-mandelbrot-nl/#installeren-van-python-en-pycharm"
     children:
     - title: "Python installeren"
       url: "/tutorials/python-mandelbrot-nl/#python-installeren"
     - title: "PyCharm installeren"
       url: "/tutorials/python-mandelbrot-nl/#pycharm-installeren"
-  - title: "Stap 2 - Een python project maken"
-    url: "/tutorials/python-mandelbrot-nl/#stap-2---een-python-project-maken"
-  - title: "Stap 3 - Een python applicatie maken"
-    url: "/tutorials/python-mandelbrot-nl/#stap-3---een-python-applicatie-maken"
+  - title: "Een python project maken"
+    url: "/tutorials/python-mandelbrot-nl/#een-python-project-maken"
+  - title: "Een python applicatie maken"
+    url: "/tutorials/python-mandelbrot-nl/#een-python-applicatie-maken"
     children:
     - title: "Een programma schrijven"
       url: "/tutorials/python-mandelbrot-nl/#een-programma-schrijven"
