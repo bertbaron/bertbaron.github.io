@@ -27,7 +27,7 @@ een subtiel andere vorm terugkomen. Het resultaat is een oneindig complexe vorm 
 waar je uren naar kunt kijken.
 
 De basis van de Mandelbrot is een eenvoudige formule. Het tekenen van de Mandelbrot met een computer programma is dan
-ook niet zo moeilijk. Bovendien is het een leuk projectje als je ook wat van wiskunde.
+ook niet zo moeilijk. Bovendien is het een leuk projectje als je ook wat van wiskunde houdt en/of wilt leren.
 
 Ook al is de Mandelbrot in de basis eenvoudig, je zult zien dat er toch wel wat bij komt kijken om een mooie Mandelbrot
 app te maken waarbij je kunt inzoomen en uitzoomen en als je meer functies wilt toevoegen. Deze hele tutorial zal dus
