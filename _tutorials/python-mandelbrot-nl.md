@@ -37,14 +37,15 @@ wel wat tijd kosten. Maar het resultaat is dan ook wel heel mooi!
 
 ## Python installeren
 
-Python is een programmeertaal. Ga naar https://www.python.org/downloads/ en download en installeer Python op je laptop
+Python is een programmeertaal. Ga naar [python.org](https://www.python.org/downloads/) en download en installeer Python op je laptop
 als je dat niet al hebt gedaan.
 
 ## PyCharm installeren
 
 PyCharm is een Integrated Development Environment (IDE). Je kunt Python schrijven met elke teksteditor, maar met een IDE
-heb je heel veel hulp bij het programmeren. Ga naar https://www.jetbrains.com/pycharm/download en download de gratis *
-*Community** versie. Dus niet de Professional versie want daar is een licentie voor nodig!
+heb je heel veel hulp bij het programmeren. Ga naar [jetbrains.com](https://www.jetbrains.com/pycharm/download) en
+download de gratis **Community** versie. Dus niet de Professional versie want daar is een licentie voor nodig! Voor de
+community versie moet je iets naar beneden scrollen op de pagina.
 
 # Een python project maken
 
