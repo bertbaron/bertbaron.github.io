@@ -34,10 +34,28 @@ Graylog requires quite some resources. In my case installed it in a Proxmox LXC 
 
 Graylog can be installed in various ways on various platforms and the installation is well documented. So please refer to the [Graylog documentation](https://docs.graylog.org/docs/installing) and install Graylog the way you choose.
 
-In my case I created a Proxmox LXC container with Debian and installed Graylog following the instructions for Debian.
-
 It could be possible to follow the Docker installation installing it side-by-side to HA. But I didn't test this and I'm not sure if the supervisor would like it for example, maybe your HA would become even more unsupported.
 {: .notice--info}
+
+In my case I created a Proxmox LXC container with Debian and installed Graylog following the instructions for Debian.
+
+>   *\[Update jan 2025\]* because many people seem to arrive here searching for a way to install Graylog on a Proxmox LXC container I did a new installation to provide a bit more details here. I basically followed the [Debian Installation Documentation](https://go2docs.graylog.org/current/downloading_and_installing_graylog/debian_installation.htm) which documents support up to Debian 12 at the moment of writing.
+>
+>  I used the following steps:
+>
+>   1. Download the Debian 12 template
+>      * In the Server View tree on the left, expand the node for your server and select `local (<your node>)`. 
+>      * Choose `CT Templates` and click the `Templates` button 
+>      * Select `debian-12-standard` (latest stable at the moment of writing) and click `Download`
+>   2. Create the container
+>      * Click the `Create CT` button on the top-right
+>      * Fill `General` with the appropriate values
+>      * On the `Template` tab, choose the template you just downloaded
+>      * On the `Disks` tab choose at least 16GB of disk space (TODO reference to Graylog tuning steps)
+>      * On the `Memory` tab I choose 3GB of memory and `512MB` of swap
+>      * Start the container, make sure to `apt update` `apt-update`, and optionally setup another user, install [Unattended Upgrades](https://wiki.debian.org/UnattendedUpgrades) if you like etc.
+>   3. Install Graylog [According the documentation](https://go2docs.graylog.org/current/downloading_and_installing_graylog/debian_installation.htm)
+{: .additional-info }
 
 ## Enable the GELF UDP input adapter
 

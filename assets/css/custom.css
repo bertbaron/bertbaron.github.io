@@ -11,3 +11,12 @@
 }
 
 .sidebar__right { margin-bottom: 2em; }
+
+.additional-info {
+  background-color: #f9f9f9;
+  font-size: 0.7em;
+  /* Remove the border added by blockquote */
+  border: none;
+  /* Reset the cursive text style */
+  font-style: normal;
+}
