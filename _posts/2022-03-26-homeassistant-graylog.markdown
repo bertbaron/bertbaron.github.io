@@ -39,7 +39,7 @@ It could be possible to follow the Docker installation installing it side-by-sid
 
 In my case I created a Proxmox LXC container with Debian and installed Graylog following the instructions for Debian.
 
->   *\[Update jan 2025\]* because many people seem to arrive here searching for a way to install Graylog on a Proxmox LXC container I did a new installation to provide a bit more details here. I basically followed the [Debian Installation Documentation](https://go2docs.graylog.org/current/downloading_and_installing_graylog/debian_installation.htm) which documents support up to Debian 12 at the moment of writing.
+>   *\[Update jan 2025\]* because many people seem to arrive here searching for a way to install Graylog on a Proxmox LXC container I did a new installation to provide a bit more details here. I basically followed the [Debian Installation Documentation](https://go2docs.graylog.org/current/downloading_and_installing_graylog/debian_installation.htm) which documents the installation of Graylog 6.1 with support up to Debian 12 at the moment of writing.
 >
 >  I used the following steps:
 >
@@ -52,7 +52,7 @@ In my case I created a Proxmox LXC container with Debian and installed Graylog f
 >      * Fill `General` with the appropriate values
 >      * On the `Template` tab, choose the template you just downloaded
 >      * On the `Disks` tab choose at least 16GB of disk space (TODO reference to Graylog tuning steps)
->      * On the `Memory` tab I choose 3GB of memory and `512MB` of swap
+>      * On the `Memory` tab I choose 4GB of memory and `512MB` of swap (Graylog 6 really seems to require this)
 >      * Start the container, make sure to `apt update` `apt-update`, and optionally setup another user, install [Unattended Upgrades](https://wiki.debian.org/UnattendedUpgrades) if you like etc.
 >   3. Install Graylog [According the documentation](https://go2docs.graylog.org/current/downloading_and_installing_graylog/debian_installation.htm)
 {: .additional-info }
@@ -102,7 +102,7 @@ You may stop at this point, but if you want to tune your installation a bit more
 
 ## Optional: Create a 'normal' user
 
-You may want to create a 'normal' user besides the default admin user. I noticed that for the admin user you can't change things like the timezone through the UI. Thats why I created a user anyway. You can still assign the Admin role to it if you like.
+You may want to create a 'normal' user besides the default admin user. I noticed that for the admin user you can't change things like the timezone through the UI. That's why I created a user anyway. You can still assign the Admin role to it if you like.
 
 ## Optional: Create a saved search
 
